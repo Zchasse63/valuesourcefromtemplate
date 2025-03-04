@@ -13,8 +13,11 @@ import CustomerList from "@/pages/CustomerList";
 import CustomerDetail from "@/pages/CustomerDetail";
 import Notifications from "@/pages/Notifications";
 import Settings from "@/pages/Settings";
+import { useAuth } from "@/contexts/AuthContext";
 
 const AppRoutes = () => {
+  const { user } = useAuth();
+
   return (
     <Routes>
       {/* Public routes */}
@@ -23,6 +26,7 @@ const AppRoutes = () => {
       
       {/* Protected routes for all authenticated users */}
       <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Index />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/notifications" element={<Notifications />} />
@@ -46,8 +50,8 @@ const AppRoutes = () => {
         <Route path="/analytics" element={<Analytics />} />
       </Route>
       
-      {/* Default routes */}
-      <Route path="/" element={<Index />} />
+      {/* Default route for non-authenticated users */}
+      {!user && <Route path="/" element={<Index />} />}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
