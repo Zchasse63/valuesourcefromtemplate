@@ -1,100 +1,141 @@
 
-import { Home, PieChart, Settings, User, CreditCard, Bell, LogOut } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { 
+  LayoutDashboard, 
+  BarChart3, 
+  Receipt, 
+  Settings, 
+  Bell, 
+  User, 
+  LogOut,
+  Users
+} from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { UserRole } from "@/types/auth";
-
-interface MenuItem {
-  icon: React.FC<React.SVGProps<SVGSVGElement>>;
-  label: string;
-  path: string;
-  allowedRoles: UserRole[];
-}
-
-const menuItems: MenuItem[] = [
-  { icon: Home, label: "Dashboard", path: "/", allowedRoles: ["customer", "salesperson", "admin"] },
-  { icon: PieChart, label: "Analytics", path: "/analytics", allowedRoles: ["admin"] },
-  { icon: CreditCard, label: "Transactions", path: "/transactions", allowedRoles: ["salesperson", "admin"] },
-  { icon: Bell, label: "Notifications", path: "/notifications", allowedRoles: ["customer", "salesperson", "admin"] },
-  { icon: User, label: "Profile", path: "/profile", allowedRoles: ["customer", "salesperson", "admin"] },
-  { icon: Settings, label: "Settings", path: "/settings", allowedRoles: ["admin"] },
-];
+import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
+  // Define navigation items based on user role
+  const getNavItems = () => {
+    const commonItems = [
+      {
+        name: "Dashboard",
+        href: "/",
+        icon: LayoutDashboard,
+      },
+      {
+        name: "Profile",
+        href: "/profile",
+        icon: User,
+      },
+      {
+        name: "Notifications",
+        href: "/notifications",
+        icon: Bell,
+      },
+      {
+        name: "Settings",
+        href: "/settings",
+        icon: Settings,
+      },
+    ];
+
+    // Role-specific items
+    if (user?.role === "admin") {
+      return [
+        ...commonItems,
+        {
+          name: "Analytics",
+          href: "/analytics",
+          icon: BarChart3,
+        },
+        {
+          name: "Customers",
+          href: "/customers",
+          icon: Users,
+        },
+        {
+          name: "Transactions",
+          href: "/transactions",
+          icon: Receipt,
+        },
+      ];
+    } else if (user?.role === "salesperson") {
+      return [
+        ...commonItems,
+        {
+          name: "Customers",
+          href: "/customers",
+          icon: Users,
+        },
+        {
+          name: "Transactions",
+          href: "/transactions",
+          icon: Receipt,
+        },
+      ];
+    } else if (user?.role === "customer") {
+      return [
+        ...commonItems,
+        {
+          name: "My Profile",
+          href: "/customer-profile",
+          icon: User,
+        },
+      ];
+    }
+
+    return commonItems;
   };
 
-  const visibleMenuItems = user 
-    ? menuItems.filter(item => item.allowedRoles.includes(user.role))
-    : [];
+  const navItems = getNavItems();
 
   return (
-    <div className="fixed left-0 top-0 h-full w-64 glass-card border-r border-white/10">
+    <div className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 shadow-sm">
       <div className="flex flex-col h-full">
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-primary">Finance</h2>
+        <div className="h-16 flex items-center px-6 border-b">
+          <h1 className="text-xl font-bold text-primary">Pallet Pro</h1>
         </div>
-        
-        <nav className="flex-1 px-4">
-          <ul className="space-y-2">
-            {visibleMenuItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-              
-              return (
-                <li key={item.path}>
-                  <Link
-                    to={item.path}
-                    className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
-                      "hover:bg-white/10",
-                      isActive ? "bg-white/10" : "text-secondary"
-                    )}
-                  >
-                    <Icon className="h-5 w-5" />
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        <div className="p-4 mt-auto">
-          {user ? (
-            <>
-              <div className="flex items-center gap-3 px-4 py-3">
-                <User className="h-8 w-8 rounded-full bg-accent p-1" />
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">{user.name}</span>
-                  <span className="text-xs text-secondary">{user.role}</span>
-                </div>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="flex w-full items-center gap-3 px-4 py-3 rounded-lg mt-2 text-secondary hover:bg-white/10 transition-all duration-200"
-              >
-                <LogOut className="h-5 w-5" />
-                <span>Logout</span>
-              </button>
-            </>
-          ) : (
-            <div className="flex items-center gap-3 px-4 py-3">
+        <div className="flex-1 overflow-auto py-6">
+          <nav className="space-y-1 px-3">
+            {navItems.map((item) => (
               <Link
-                to="/login"
-                className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground hover:bg-primary/90"
+                key={item.href}
+                to={item.href}
+                className={cn(
+                  "flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  location.pathname === item.href
+                    ? "bg-primary text-primary-foreground"
+                    : "text-secondary-foreground hover:bg-secondary hover:text-secondary-foreground"
+                )}
               >
-                Sign In
+                <item.icon className="h-5 w-5 mr-2" />
+                {item.name}
               </Link>
+            ))}
+          </nav>
+        </div>
+        <div className="p-4 border-t">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="h-8 w-8 bg-primary/10 rounded-full flex items-center justify-center text-sm font-medium text-primary">
+                {user?.name ? user.name.charAt(0) : "U"}
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium">{user?.name || "User"}</p>
+                <p className="text-xs text-muted-foreground capitalize">{user?.role || "Guest"}</p>
+              </div>
             </div>
-          )}
+            <button
+              onClick={logout}
+              className="p-1.5 rounded-lg text-muted-foreground hover:bg-secondary hover:text-secondary-foreground"
+              aria-label="Logout"
+            >
+              <LogOut className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
