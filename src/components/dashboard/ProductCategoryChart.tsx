@@ -1,14 +1,11 @@
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
-import { useProducts } from "@/hooks/useProductsApi";
 import { ChartPie } from "lucide-react";
-import { ChartWrapper } from "@/components/charts/ChartWrapper";
-import { useChartContext } from "@/contexts/ChartContext";
+import { useProducts } from "@/hooks/useProductsApi";
+import { PieChartComponent } from "@/components/charts/PieChartComponent";
 import { formatCurrency } from "@/utils/chartUtils";
 
 export const ProductCategoryChart = () => {
   const { data: products, isLoading } = useProducts();
-  const { getColors, getTooltipProps } = useChartContext();
   
   // Process product data for chart visualization
   const chartData = () => {
@@ -36,36 +33,15 @@ export const ProductCategoryChart = () => {
   };
 
   return (
-    <ChartWrapper
+    <PieChartComponent
+      data={chartData()}
       title="Product Categories"
       icon={ChartPie}
+      nameKey="name"
+      dataKey="value"
+      valueFormatter={(value) => formatCurrency(value)}
       isLoading={isLoading}
       error={!products && !isLoading ? new Error("No product data available") : null}
-    >
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={chartData()}
-            cx="50%"
-            cy="50%"
-            labelLine={true}
-            outerRadius={100}
-            fill="#8884d8"
-            dataKey="value"
-            nameKey="name"
-            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-          >
-            {chartData().map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getColors()[index % getColors().length]} />
-            ))}
-          </Pie>
-          <Tooltip 
-            {...getTooltipProps()}
-            formatter={(value) => [formatCurrency(Number(value)), 'Value']}
-          />
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
-    </ChartWrapper>
+    />
   );
 };

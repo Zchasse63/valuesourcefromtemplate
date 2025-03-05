@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { 
   LineChart, 
@@ -7,18 +6,16 @@ import {
   XAxis, 
   YAxis, 
   Tooltip, 
-  BarChart, 
-  Bar, 
   CartesianGrid, 
-  Legend,
-  PieChart,
-  Pie,
-  Cell
+  Legend
 } from "recharts";
 import { useState } from "react";
 import { SalesMetrics } from "@/types/sales";
+import { formatCurrency } from "@/utils/chartUtils";
+import { BarChartComponent } from "@/components/charts/BarChartComponent";
+import { PieChartComponent } from "@/components/charts/PieChartComponent";
+import { ChartPie, BarChart } from "lucide-react";
 
-// Sample data for demonstration
 const sampleSalesMetrics: SalesMetrics = {
   totalSales: 485600,
   totalCommissions: 24280,
@@ -48,19 +45,8 @@ const sampleSalesMetrics: SalesMetrics = {
   ]
 };
 
-const COLORS = ['#8884d8', '#83a6ed', '#8dd1e1', '#82ca9d', '#a4de6c'];
-
 const Analytics = () => {
   const [metrics] = useState<SalesMetrics>(sampleSalesMetrics);
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
 
   return (
     <div className="space-y-8">
@@ -113,47 +99,26 @@ const Analytics = () => {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="glass-card p-6">
-          <h3 className="text-lg font-semibold mb-4">Top Selling Products</h3>
-          <div className="h-[350px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={metrics.topSellingProducts}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="product" stroke="#888888" tick={{ fontSize: 12 }} />
-                <YAxis stroke="#888888" tickFormatter={(value) => `$${value / 1000}k`} />
-                <Tooltip formatter={(value) => [`${formatCurrency(value as number)}`, 'Revenue']} />
-                <Legend />
-                <Bar dataKey="revenue" name="Revenue" fill="#8989DE" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
+        <BarChartComponent
+          data={metrics.topSellingProducts}
+          title="Top Selling Products"
+          icon={BarChart}
+          xAxisKey="product"
+          yAxisKey="revenue"
+          yAxisFormatter={(value) => formatCurrency(value)}
+          barName="Revenue"
+          className="h-[350px]"
+        />
 
-        <Card className="glass-card p-6">
-          <h3 className="text-lg font-semibold mb-4">Product Sales Distribution</h3>
-          <div className="h-[350px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={metrics.topSellingProducts}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={true}
-                  outerRadius={120}
-                  fill="#8884d8"
-                  dataKey="revenue"
-                  nameKey="product"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                >
-                  {metrics.topSellingProducts.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value) => formatCurrency(value as number)} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
+        <PieChartComponent
+          data={metrics.topSellingProducts}
+          title="Product Sales Distribution"
+          icon={ChartPie}
+          nameKey="product"
+          dataKey="revenue"
+          valueFormatter={(value) => formatCurrency(value)}
+          className="h-[350px]"
+        />
       </div>
     </div>
   );
