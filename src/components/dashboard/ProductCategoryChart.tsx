@@ -1,13 +1,12 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
-import { useProductsApi } from "@/hooks/useProductsApi";
+import { useProducts } from "@/hooks/useProductsApi";
 import { ChartPie } from "lucide-react";
 
 const COLORS = ['#8884d8', '#83a6ed', '#8dd1e1', '#82ca9d', '#a4de6c'];
 
 export const ProductCategoryChart = () => {
-  const { data: products, isLoading } = useProductsApi();
+  const { data: products, isLoading } = useProducts();
 
   if (isLoading) {
     return (

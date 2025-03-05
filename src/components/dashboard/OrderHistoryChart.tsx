@@ -1,13 +1,13 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { useOrdersApi } from "@/hooks/useOrdersApi";
+import { useOrders } from "@/hooks/useOrdersApi";
 import { useState } from "react";
 import { Calendar, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const OrderHistoryChart = () => {
-  const { data: orders, isLoading } = useOrdersApi();
+  const { data: orders, isLoading } = useOrders();
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   if (isLoading) {
