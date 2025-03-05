@@ -5,6 +5,7 @@ import { ProfileInformation } from "@/components/customer/ProfileInformation";
 import { SalespersonCard } from "@/components/customer/SalespersonCard";
 import { CustomerMetrics } from "@/components/customer/CustomerMetrics";
 import { AddressCards } from "@/components/customer/AddressCards";
+import { RecentActivity } from "@/components/customer/RecentActivity";
 
 const CustomerProfile = () => {
   const { data: profile, isLoading: profileLoading } = useCustomerProfile();
@@ -49,7 +50,10 @@ const CustomerProfile = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <ProfileInformation profile={profile} formatDate={formatDate} />
-        <SalespersonCard salesperson={profile.assignedSalesperson} />
+        <div className="space-y-6">
+          <SalespersonCard salesperson={profile.assignedSalesperson} />
+          <RecentActivity profile={profile} formatDate={formatDate} />
+        </div>
       </div>
 
       <CustomerMetrics 
