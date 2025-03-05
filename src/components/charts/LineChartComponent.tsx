@@ -32,7 +32,7 @@ export const LineChartComponent = ({
   actions,
   className = ''
 }: LineChartProps) => {
-  const { getColors, getTooltipProps } = useChartContext();
+  const { getColors, getTooltipProps, theme } = useChartContext();
   
   return (
     <ChartWrapper 
@@ -57,7 +57,7 @@ export const LineChartComponent = ({
               name
             ]}
           />
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" opacity={0.3} />
+          <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? "#444" : "#f0f0f0"} opacity={0.3} />
           <Legend />
           <Line
             type="monotone"

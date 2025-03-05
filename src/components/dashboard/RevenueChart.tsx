@@ -1,6 +1,7 @@
 
-import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
-import { Card } from "@/components/ui/card";
+import { LineChartComponent } from "@/components/charts/LineChartComponent";
+import { ChartWrapper } from "@/components/charts/ChartWrapper";
+import { formatCurrency } from "@/utils/chartUtils";
 
 interface ChartData {
   name: string;
@@ -14,51 +15,39 @@ interface RevenueChartProps {
 }
 
 export const RevenueChart = ({ data, activeTab, onTabChange }: RevenueChartProps) => {
+  const actions = (
+    <div className="flex rounded-md overflow-hidden">
+      <button 
+        className={`px-3 py-1 text-sm ${activeTab === 'day' ? 'bg-primary text-white' : 'bg-gray-100'}`}
+        onClick={() => onTabChange('day')}
+      >
+        Day
+      </button>
+      <button 
+        className={`px-3 py-1 text-sm ${activeTab === 'week' ? 'bg-primary text-white' : 'bg-gray-100'}`}
+        onClick={() => onTabChange('week')}
+      >
+        Week
+      </button>
+      <button 
+        className={`px-3 py-1 text-sm ${activeTab === 'month' ? 'bg-primary text-white' : 'bg-gray-100'}`}
+        onClick={() => onTabChange('month')}
+      >
+        Month
+      </button>
+    </div>
+  );
+
   return (
-    <Card className="glass-card p-6 lg:col-span-2">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold">Spending Overview</h3>
-        <div className="flex rounded-md overflow-hidden">
-          <button 
-            className={`px-3 py-1 text-sm ${activeTab === 'day' ? 'bg-primary text-white' : 'bg-gray-100'}`}
-            onClick={() => onTabChange('day')}
-          >
-            Day
-          </button>
-          <button 
-            className={`px-3 py-1 text-sm ${activeTab === 'week' ? 'bg-primary text-white' : 'bg-gray-100'}`}
-            onClick={() => onTabChange('week')}
-          >
-            Week
-          </button>
-          <button 
-            className={`px-3 py-1 text-sm ${activeTab === 'month' ? 'bg-primary text-white' : 'bg-gray-100'}`}
-            onClick={() => onTabChange('month')}
-          >
-            Month
-          </button>
-        </div>
-      </div>
-      <div className="h-[300px] w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
-            <XAxis dataKey="name" stroke="#888888" />
-            <YAxis stroke="#888888" />
-            <Tooltip 
-              contentStyle={{ background: 'white', border: '1px solid #f0f0f0', borderRadius: '8px' }}
-              formatter={(value) => [`$${value}`, 'Revenue']}
-            />
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke="#8884d8"
-              strokeWidth={3}
-              dot={{ r: 4, fill: '#8884d8' }}
-              activeDot={{ r: 6, fill: '#8884d8' }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </Card>
+    <LineChartComponent
+      data={data}
+      title="Spending Overview"
+      xAxisKey="name"
+      yAxisKey="value"
+      yAxisFormatter={(value) => formatCurrency(value)}
+      lineName="Revenue"
+      actions={actions}
+      className="lg:col-span-2"
+    />
   );
 };

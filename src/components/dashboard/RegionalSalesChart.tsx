@@ -1,9 +1,9 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { BarChartComponent } from "@/components/charts/BarChartComponent";
 import { Button } from "@/components/ui/button";
 import { Activity } from "lucide-react";
+import { formatCurrency } from "@/utils/chartUtils";
 
 // Sample data - in a real app, this would come from an API
 const regionalSalesData = [
@@ -17,59 +17,39 @@ const regionalSalesData = [
 export const RegionalSalesChart = () => {
   const [dataKey, setDataKey] = useState<"sales" | "customers">("sales");
 
+  const actions = (
+    <div className="flex space-x-1">
+      <Button 
+        variant={dataKey === "sales" ? "default" : "outline"} 
+        size="sm"
+        onClick={() => setDataKey("sales")}
+        className="h-8 px-3"
+      >
+        Sales
+      </Button>
+      <Button 
+        variant={dataKey === "customers" ? "default" : "outline"} 
+        size="sm"
+        onClick={() => setDataKey("customers")}
+        className="h-8 px-3"
+      >
+        Customers
+      </Button>
+    </div>
+  );
+
   return (
-    <Card className="glass-card">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <Activity className="h-5 w-5 text-primary" />
-            Regional Performance
-          </CardTitle>
-          <div className="flex space-x-1">
-            <Button 
-              variant={dataKey === "sales" ? "default" : "outline"} 
-              size="sm"
-              onClick={() => setDataKey("sales")}
-              className="h-8 px-3"
-            >
-              Sales
-            </Button>
-            <Button 
-              variant={dataKey === "customers" ? "default" : "outline"} 
-              size="sm"
-              onClick={() => setDataKey("customers")}
-              className="h-8 px-3"
-            >
-              Customers
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={regionalSalesData} layout="vertical">
-              <XAxis type="number" />
-              <YAxis dataKey="region" type="category" width={80} />
-              <Tooltip
-                formatter={(value) => [
-                  dataKey === "sales" 
-                    ? `$${Number(value).toLocaleString()}` 
-                    : value,
-                  dataKey === "sales" ? "Sales" : "Customers"
-                ]}
-              />
-              <Legend />
-              <Bar 
-                dataKey={dataKey} 
-                fill={dataKey === "sales" ? "#8884d8" : "#82ca9d"} 
-                name={dataKey === "sales" ? "Sales ($)" : "Customer Count"}
-                radius={[0, 4, 4, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+    <BarChartComponent
+      data={regionalSalesData}
+      title="Regional Performance"
+      icon={Activity}
+      xAxisKey={dataKey === "sales" ? "sales" : "customers"}
+      yAxisKey={dataKey}
+      yAxisFormatter={(value) => dataKey === "sales" ? formatCurrency(value) : value.toString()}
+      barName={dataKey === "sales" ? "Sales ($)" : "Customer Count"}
+      layout="vertical"
+      actions={actions}
+      className="h-[350px]"
+    />
   );
 };
