@@ -2,6 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { formatCurrency } from "@/utils/chartUtils";
 
 interface Transaction {
   id: number;
@@ -42,7 +43,7 @@ export const TransactionList = ({ transactions }: TransactionListProps) => {
             <p className={`font-medium ${
               transaction.amount > 0 ? 'text-green-500' : 'text-red-500'
             }`}>
-              {transaction.amount > 0 ? '+' : ''}{transaction.amount.toFixed(2)}
+              {transaction.amount > 0 ? '+' : ''}{formatCurrency(transaction.amount, 2)}
             </p>
           </div>
         ))}
