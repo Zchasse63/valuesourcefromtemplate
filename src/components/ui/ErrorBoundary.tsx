@@ -48,7 +48,7 @@ class ErrorBoundaryBase extends Component<ErrorBoundaryProps, ErrorBoundaryState
     // Use toast if available
     const { toast, componentName } = this.props;
     if (toast) {
-      toast.error({
+      toast.toast.error({
         title: `Error in ${componentName || 'component'}`,
         description: error.message || 'An unexpected error occurred',
       });
