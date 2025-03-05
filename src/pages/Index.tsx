@@ -8,6 +8,10 @@ import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { TransactionList } from "@/components/dashboard/TransactionList";
 import { ExpenseChart } from "@/components/dashboard/ExpenseChart";
 import { BudgetStatus } from "@/components/dashboard/BudgetStatus";
+import { OrderHistoryChart } from "@/components/dashboard/OrderHistoryChart";
+import { ProductCategoryChart } from "@/components/dashboard/ProductCategoryChart";
+import { RegionalSalesChart } from "@/components/dashboard/RegionalSalesChart";
+import { useAuth } from "@/contexts/AuthContext";
 
 const revenueData = [
   { name: "Jan", value: 2400 },
@@ -36,6 +40,7 @@ const recentTransactions = [
 const Index = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("month");
+  const { user } = useAuth();
   
   const handleRefresh = () => {
     toast.success({
@@ -80,6 +85,8 @@ const Index = () => {
     }, 3000);
   };
 
+  const isCustomer = user?.role === "customer";
+
   return (
     <div className="space-y-8">
       <DashboardHeader onRefresh={handleRefresh} onShowAllToasts={showAllToasts} />
@@ -114,19 +121,48 @@ const Index = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <RevenueChart 
-          data={revenueData}
-          activeTab={activeTab}
-          onTabChange={handleTabChange}
-        />
-        <TransactionList transactions={recentTransactions} />
-      </div>
+      {isCustomer ? (
+        // Customer-specific visualization components
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <OrderHistoryChart />
+            <ProductCategoryChart />
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <RevenueChart 
+              data={revenueData}
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+            />
+            <TransactionList transactions={recentTransactions} />
+          </div>
+        </>
+      ) : (
+        // Original dashboard components for other users
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <RevenueChart 
+              data={revenueData}
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+            />
+            <TransactionList transactions={recentTransactions} />
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ExpenseChart data={expenseData} />
-        <BudgetStatus />
-      </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ExpenseChart data={expenseData} />
+            <BudgetStatus />
+          </div>
+          
+          {/* Additional visualization for sales staff and admins */}
+          {(user?.role === "salesperson" || user?.role === "admin") && (
+            <div className="grid grid-cols-1 gap-6">
+              <RegionalSalesChart />
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };
