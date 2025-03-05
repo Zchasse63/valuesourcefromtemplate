@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { UserRole } from "@/types/auth";
+import { useEffect } from "react";
 
 interface RolePermission {
   role: UserRole;
@@ -13,6 +14,11 @@ interface RolePermission {
 
 const Unauthorized = () => {
   const { user } = useAuth();
+
+  useEffect(() => {
+    // Log access attempt for debugging purposes
+    console.log("Unauthorized page accessed by user:", user?.email || "unauthenticated user");
+  }, [user]);
 
   // Define role permissions for better explanation
   const rolePermissions: RolePermission[] = [
@@ -88,7 +94,7 @@ const Unauthorized = () => {
           <div className="flex flex-wrap justify-center gap-3">
             {availablePages.map((page) => (
               <Link
-                key={page.path}
+                key={page.path + page.name}
                 to={page.path}
                 className="flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2 font-medium text-primary hover:bg-primary/20 transition-all"
               >
