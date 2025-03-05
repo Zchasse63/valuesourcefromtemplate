@@ -47,6 +47,34 @@ const Index = () => {
     });
   };
 
+  const showAllToasts = () => {
+    toast({
+      title: "Default Toast",
+      description: "This is a default toast notification",
+    });
+    
+    setTimeout(() => {
+      toast.success({
+        title: "Success Toast",
+        description: "Operation completed successfully",
+      });
+    }, 1000);
+    
+    setTimeout(() => {
+      toast.warning({
+        title: "Warning Toast",
+        description: "This action might have consequences",
+      });
+    }, 2000);
+    
+    setTimeout(() => {
+      toast.error({
+        title: "Error Toast",
+        description: "Something went wrong with this operation",
+      });
+    }, 3000);
+  };
+
   return (
     <div className="space-y-8">
       <header className="flex justify-between items-center">
@@ -64,9 +92,10 @@ const Index = () => {
           </button>
           <button 
             className="glass-card px-4 py-2 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-200 flex items-center gap-2"
+            onClick={showAllToasts}
           >
             <Calendar className="h-5 w-5" />
-            <span className="hidden md:inline">Calendar</span>
+            <span className="hidden md:inline">Test Toasts</span>
           </button>
         </div>
       </header>
