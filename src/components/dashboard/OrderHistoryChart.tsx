@@ -56,7 +56,7 @@ export const OrderHistoryChart = () => {
       return orderDate >= startOfMonth && orderDate <= endOfMonth;
     });
     
-    const totalAmount = monthOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+    const totalAmount = monthOrders.reduce((sum, order) => sum + order.total, 0);
     
     return {
       month,

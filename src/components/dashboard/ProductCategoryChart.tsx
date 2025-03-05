@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { useProducts } from "@/hooks/useProductsApi";
@@ -44,7 +45,8 @@ export const ProductCategoryChart = () => {
         count: 0
       };
     }
-    acc[category].value += product.price * (product.inventory || 0);
+    // Use pricePerPallet instead of price, and inStock as a binary value (1 or 0) since there's no inventory field
+    acc[category].value += product.pricePerPallet * (product.inStock ? 1 : 0);
     acc[category].count += 1;
     return acc;
   }, {} as Record<string, { name: string; value: number; count: number }>);
