@@ -1,6 +1,7 @@
 
 import { LogOut, User as UserIcon } from "lucide-react";
 import { User } from "@/types/auth";
+import { useToast } from "@/components/ui/use-toast";
 
 interface UserProfileProps {
   user: User | null;
@@ -10,7 +11,9 @@ interface UserProfileProps {
 /**
  * User profile component for the sidebar
  * 
- * Displays user information and logout button
+ * Implements CodeFarm principles:
+ * - User-Centric Design: Provides clear visual feedback on user actions
+ * - Sustainable Code: Focused component with single responsibility
  * 
  * @component
  * @param {UserProfileProps} props - Component properties
@@ -19,6 +22,17 @@ interface UserProfileProps {
  * @returns {JSX.Element} Rendered user profile section
  */
 const UserProfile = ({ user, onLogout }: UserProfileProps) => {
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    toast({
+      title: "Logging out",
+      description: "You are being signed out of your account",
+      duration: 2000,
+    });
+    onLogout();
+  };
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center">
@@ -31,7 +45,7 @@ const UserProfile = ({ user, onLogout }: UserProfileProps) => {
         </div>
       </div>
       <button
-        onClick={onLogout}
+        onClick={handleLogout}
         className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700"
         aria-label="Logout"
       >

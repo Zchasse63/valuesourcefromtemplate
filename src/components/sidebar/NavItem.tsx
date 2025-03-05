@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/components/ui/use-toast";
 
 interface NavItemProps {
   href: string;
@@ -13,6 +14,10 @@ interface NavItemProps {
 /**
  * Navigation item component for the sidebar
  * 
+ * Implements CodeFarm principles:
+ * - User-Centric Design: Provides visual feedback on navigation
+ * - Sustainable Code: Reusable component with clear responsibility
+ * 
  * @component
  * @param {NavItemProps} props - Component properties
  * @param {string} props.href - Navigation link destination
@@ -22,6 +27,18 @@ interface NavItemProps {
  * @returns {JSX.Element} Rendered navigation item
  */
 const NavItem = ({ href, icon: Icon, name, isActive }: NavItemProps) => {
+  const { toast } = useToast();
+
+  const handleNavigation = () => {
+    if (!isActive) {
+      toast({
+        title: "Navigating",
+        description: `You are now viewing the ${name} page`,
+        duration: 2000,
+      });
+    }
+  };
+
   return (
     <Link
       to={href}
@@ -32,6 +49,7 @@ const NavItem = ({ href, icon: Icon, name, isActive }: NavItemProps) => {
           : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
       )}
       aria-current={isActive ? "page" : undefined}
+      onClick={handleNavigation}
     >
       <Icon className="h-5 w-5 mr-2" />
       {name}
