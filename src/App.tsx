@@ -6,19 +6,33 @@ import "./App.css";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ChartProvider } from "@/contexts/ChartContext";
+import { DashboardProvider } from "@/contexts/DashboardContext";
+import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 
-// Create a client
-const queryClient = new QueryClient();
+// Create a client with improved error handling and caching
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1,
+      refetchOnWindowFocus: true,
+    },
+  },
+});
 
 function App() {
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <ChartProvider>
-            <AppRoutes />
-            <Toaster />
-          </ChartProvider>
+          <AccessibilityProvider>
+            <ChartProvider>
+              <DashboardProvider>
+                <AppRoutes />
+                <Toaster />
+              </DashboardProvider>
+            </ChartProvider>
+          </AccessibilityProvider>
         </AuthProvider>
       </QueryClientProvider>
     </BrowserRouter>

@@ -1,3 +1,5 @@
+
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { 
   LineChart, 
@@ -9,12 +11,15 @@ import {
   CartesianGrid, 
   Legend
 } from "recharts";
-import { useState } from "react";
 import { SalesMetrics } from "@/types/sales";
 import { formatCurrency } from "@/utils/chartUtils";
 import { BarChartComponent } from "@/components/charts/BarChartComponent";
 import { PieChartComponent } from "@/components/charts/PieChartComponent";
 import { ChartPie, BarChart } from "lucide-react";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { DashboardProvider, useDashboard } from "@/contexts/DashboardContext";
+import { BusinessObjectives } from "@/components/dashboard/BusinessObjectives";
+import { AIInsights } from "@/components/analytics/AIInsights";
 
 const sampleSalesMetrics: SalesMetrics = {
   totalSales: 485600,
@@ -45,14 +50,20 @@ const sampleSalesMetrics: SalesMetrics = {
   ]
 };
 
-const Analytics = () => {
+const AnalyticsContent = () => {
   const [metrics] = useState<SalesMetrics>(sampleSalesMetrics);
+  const { viewPeriod } = useDashboard();
 
   return (
     <div className="space-y-8">
-      <header>
-        <h1 className="text-4xl font-bold text-primary">Analytics Overview</h1>
-        <p className="text-secondary-foreground">Track your financial performance</p>
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-4xl font-bold text-primary">Analytics Overview</h1>
+          <p className="text-secondary-foreground">Track your financial performance</p>
+        </div>
+        <div>
+          <p className="text-sm text-muted-foreground">Viewing data for: <span className="font-medium capitalize">{viewPeriod}</span></p>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -74,31 +85,37 @@ const Analytics = () => {
         </Card>
       </div>
 
-      <Card className="glass-card p-6">
-        <h3 className="text-lg font-semibold mb-4">Monthly Sales Performance</h3>
-        <div className="h-[400px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={metrics.monthlySales}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" stroke="#888888" />
-              <YAxis stroke="#888888" tickFormatter={(value) => `$${value / 1000}k`} />
-              <Tooltip formatter={(value) => [`${formatCurrency(value as number)}`, 'Sales']} />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="sales"
-                name="Sales"
-                stroke="#8989DE"
-                strokeWidth={2}
-                dot={{ stroke: '#8989DE', strokeWidth: 2, r: 4 }}
-                activeDot={{ r: 6 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="glass-card p-6 lg:col-span-2">
+          <h3 className="text-lg font-semibold mb-4">Monthly Sales Performance</h3>
+          <div className="h-[400px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={metrics.monthlySales}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" stroke="#888888" />
+                <YAxis stroke="#888888" tickFormatter={(value) => `$${value / 1000}k`} />
+                <Tooltip formatter={(value) => [`${formatCurrency(value as number)}`, 'Sales']} />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="sales"
+                  name="Sales"
+                  stroke="#8989DE"
+                  strokeWidth={2}
+                  dot={{ stroke: '#8989DE', strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+        
+        <BusinessObjectives />
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <AIInsights />
+        
         <BarChartComponent
           data={metrics.topSellingProducts}
           title="Top Selling Products"
@@ -107,9 +124,11 @@ const Analytics = () => {
           yAxisKey="revenue"
           yAxisFormatter={(value) => formatCurrency(value)}
           barName="Revenue"
-          className="h-[350px]"
+          className="h-[350px] lg:col-span-2"
         />
+      </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <PieChartComponent
           data={metrics.topSellingProducts}
           title="Product Sales Distribution"
@@ -119,8 +138,29 @@ const Analytics = () => {
           valueFormatter={(value) => formatCurrency(value)}
           className="h-[350px]"
         />
+        
+        <PieChartComponent
+          data={metrics.topSellingProducts.map(p => ({ name: p.product, value: p.quantity }))}
+          title="Product Volume Distribution"
+          icon={ChartPie}
+          nameKey="name"
+          dataKey="value"
+          valueFormatter={(value) => `${value} units`}
+          className="h-[350px]"
+        />
       </div>
     </div>
+  );
+};
+
+// Wrap the Analytics component with the DashboardProvider
+const Analytics = () => {
+  return (
+    <ErrorBoundary componentName="AnalyticsPage">
+      <DashboardProvider>
+        <AnalyticsContent />
+      </DashboardProvider>
+    </ErrorBoundary>
   );
 };
 

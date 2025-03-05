@@ -11,7 +11,10 @@ import { BudgetStatus } from "@/components/dashboard/BudgetStatus";
 import { OrderHistoryChart } from "@/components/dashboard/OrderHistoryChart";
 import { ProductCategoryChart } from "@/components/dashboard/ProductCategoryChart";
 import { RegionalSalesChart } from "@/components/dashboard/RegionalSalesChart";
+import { BusinessObjectives } from "@/components/dashboard/BusinessObjectives";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDashboard } from "@/contexts/DashboardContext";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 const revenueData = [
   { name: "Jan", value: 2400 },
@@ -41,8 +44,10 @@ const Index = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("month");
   const { user } = useAuth();
+  const { refreshDashboard, viewPeriod, setViewPeriod } = useDashboard();
   
   const handleRefresh = () => {
+    refreshDashboard();
     toast.success({
       title: "Dashboard Updated",
       description: "Latest financial data has been loaded",
@@ -51,6 +56,7 @@ const Index = () => {
 
   const handleTabChange = (tab: "day" | "week" | "month") => {
     setActiveTab(tab);
+    setViewPeriod(tab);
     toast({
       title: `View Changed to ${tab.charAt(0).toUpperCase() + tab.slice(1)}`,
       description: `Showing ${tab}ly financial overview`,
@@ -91,76 +97,86 @@ const Index = () => {
     <div className="space-y-8">
       <DashboardHeader onRefresh={handleRefresh} onShowAllToasts={showAllToasts} />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard 
-          title="Total Balance" 
-          value="$24,563.00" 
-          change="+2.5% from last month" 
-          isPositive={true}
-          Icon={ArrowUpRight}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-        <StatCard 
-          title="Monthly Income" 
-          value="$8,350.00" 
-          change="+4.3% from last month" 
-          isPositive={true}
-          Icon={DollarSign}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-        <StatCard 
-          title="Monthly Expenses" 
-          value="$3,628.00" 
-          change="+1.2% from last month" 
-          isPositive={false}
-          Icon={ArrowDownRight}
-          iconBgColor="bg-red-100"
-          iconColor="text-red-600"
-        />
-      </div>
+      <ErrorBoundary componentName="StatisticCards">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <StatCard 
+            title="Total Balance" 
+            value="$24,563.00" 
+            change="+2.5% from last month" 
+            isPositive={true}
+            Icon={ArrowUpRight}
+            iconBgColor="bg-green-100"
+            iconColor="text-green-600"
+          />
+          <StatCard 
+            title="Monthly Income" 
+            value="$8,350.00" 
+            change="+4.3% from last month" 
+            isPositive={true}
+            Icon={DollarSign}
+            iconBgColor="bg-blue-100"
+            iconColor="text-blue-600"
+          />
+          <StatCard 
+            title="Monthly Expenses" 
+            value="$3,628.00" 
+            change="+1.2% from last month" 
+            isPositive={false}
+            Icon={ArrowDownRight}
+            iconBgColor="bg-red-100"
+            iconColor="text-red-600"
+          />
+        </div>
+      </ErrorBoundary>
+
+      <ErrorBoundary componentName="BusinessObjectives">
+        <BusinessObjectives />
+      </ErrorBoundary>
 
       {isCustomer ? (
         // Customer-specific visualization components
         <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <OrderHistoryChart />
-            <ProductCategoryChart />
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <RevenueChart 
-              data={revenueData}
-              activeTab={activeTab}
-              onTabChange={handleTabChange}
-            />
-            <TransactionList transactions={recentTransactions} />
-          </div>
+          <ErrorBoundary componentName="CustomerVisualizations">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <OrderHistoryChart />
+              <ProductCategoryChart />
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <RevenueChart 
+                data={revenueData}
+                activeTab={activeTab}
+                onTabChange={handleTabChange}
+              />
+              <TransactionList transactions={recentTransactions} />
+            </div>
+          </ErrorBoundary>
         </>
       ) : (
         // Original dashboard components for other users
         <>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <RevenueChart 
-              data={revenueData}
-              activeTab={activeTab}
-              onTabChange={handleTabChange}
-            />
-            <TransactionList transactions={recentTransactions} />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ExpenseChart data={expenseData} />
-            <BudgetStatus />
-          </div>
-          
-          {/* Additional visualization for sales staff and admins */}
-          {(user?.role === "salesperson" || user?.role === "admin") && (
-            <div className="grid grid-cols-1 gap-6">
-              <RegionalSalesChart />
+          <ErrorBoundary componentName="StandardVisualizations">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <RevenueChart 
+                data={revenueData}
+                activeTab={activeTab}
+                onTabChange={handleTabChange}
+              />
+              <TransactionList transactions={recentTransactions} />
             </div>
-          )}
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <ExpenseChart data={expenseData} />
+              <BudgetStatus />
+            </div>
+            
+            {/* Additional visualization for sales staff and admins */}
+            {(user?.role === "salesperson" || user?.role === "admin") && (
+              <div className="grid grid-cols-1 gap-6">
+                <RegionalSalesChart />
+              </div>
+            )}
+          </ErrorBoundary>
         </>
       )}
     </div>
