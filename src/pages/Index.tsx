@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { DollarSign, PieChart, ArrowUpRight, ArrowDownRight, Bell, Calendar } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, BarChart, Bar } from "recharts";
@@ -34,7 +33,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("month");
   
   const handleRefresh = () => {
-    toast({
+    toast.success({
       title: "Dashboard Updated",
       description: "Latest financial data has been loaded",
     });
@@ -189,7 +188,7 @@ const Index = () => {
             ))}
             <button 
               className="w-full mt-2 text-center text-sm text-primary hover:underline"
-              onClick={() => toast({
+              onClick={() => toast.warning({
                 title: "Coming Soon",
                 description: "Full transaction history will be available soon",
               })}
@@ -260,7 +259,7 @@ const Index = () => {
           </div>
           <button 
             className="mt-4 w-full py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
-            onClick={() => toast({
+            onClick={() => toast.error({
               title: "Budget Management",
               description: "Budget management tools are coming soon"
             })}
