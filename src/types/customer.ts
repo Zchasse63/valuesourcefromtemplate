@@ -39,3 +39,16 @@ export interface CustomerSummary {
   averageOrderValue: number;
   lastOrderDate: Date | null;
 }
+
+// Add missing interfaces used by components
+export interface CustomerProfile extends Customer {
+  // CustomerProfile is essentially the same as Customer, just with a different name in some components
+}
+
+export interface Salesperson {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: Date;
+}
