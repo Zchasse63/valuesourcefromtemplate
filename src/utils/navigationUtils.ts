@@ -7,6 +7,8 @@ import {
   Bell, 
   User, 
   Users,
+  DollarSign,
+  LineChart,
   LucideIcon
 } from "lucide-react";
 import { User as UserType } from "@/types/auth";
@@ -63,6 +65,16 @@ export const getNavItems = (user: UserType | null): NavItem[] => {
         icon: BarChart3,
       },
       {
+        name: "Users",
+        href: "/users",
+        icon: Users,
+      },
+      {
+        name: "Sales",
+        href: "/sales",
+        icon: DollarSign,
+      },
+      {
         name: "Customers",
         href: "/customers",
         icon: Users,
@@ -77,6 +89,11 @@ export const getNavItems = (user: UserType | null): NavItem[] => {
     return [
       ...commonItems,
       {
+        name: "Team",
+        href: "/team",
+        icon: Users,
+      },
+      {
         name: "Customers",
         href: "/customers",
         icon: Users,
@@ -85,6 +102,11 @@ export const getNavItems = (user: UserType | null): NavItem[] => {
         name: "Transactions",
         href: "/transactions",
         icon: Receipt,
+      },
+      {
+        name: "Performance",
+        href: "/performance",
+        icon: LineChart,
       },
     ];
   } else if (user?.role === "customer") {

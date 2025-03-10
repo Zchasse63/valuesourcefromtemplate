@@ -17,6 +17,8 @@ import CustomerDetail from "@/pages/CustomerDetail"; // Import from the correct 
 import Transactions from "@/pages/Transactions"; // Import from the correct location
 import AdminSettings from "@/pages/admin/Settings";
 import AdminNotifications from "@/pages/admin/Notifications";
+import UsersManagement from "@/pages/admin/UsersManagement"; // New users management page
+import SalesAnalytics from "@/pages/admin/SalesAnalytics"; // New sales analytics page
 
 // Sales Portal
 import SalesPortal from "@/portals/sales/SalesPortal";
@@ -25,6 +27,7 @@ import CustomerList from "@/pages/CustomerList";
 import SalesPerformance from "@/pages/sales/Performance";
 import SalesSettings from "@/pages/sales/Settings";
 import SalesNotifications from "@/pages/sales/Notifications";
+import TeamMembers from "@/pages/sales/TeamMembers"; // New team members page for sales portal
 
 // Customer Portal
 import CustomerPortal from "@/portals/customer/CustomerPortal";
@@ -78,6 +81,8 @@ const AppRoutes = () => {
       <Route path="/admin" element={<AdminPortal />}>
         <Route index element={<AdminDashboard />} />
         <Route path="analytics" element={<Analytics />} />
+        <Route path="users" element={<UsersManagement />} /> {/* New users management route */}
+        <Route path="sales" element={<SalesAnalytics />} /> {/* New sales analytics route */}
         <Route path="salesteam" element={
           <PlaceholderPage title="Sales Team Management" />
         } />
@@ -91,6 +96,7 @@ const AppRoutes = () => {
       {/* Sales Portal Routes */}
       <Route path="/sales" element={<SalesPortal />}>
         <Route index element={<SalesDashboard />} />
+        <Route path="team" element={<TeamMembers />} /> {/* New team members route for sales portal */}
         <Route path="customers" element={<CustomerList />} />
         <Route path="customers/:customerId" element={<CustomerDetail />} />
         <Route path="transactions" element={<Transactions />} />
