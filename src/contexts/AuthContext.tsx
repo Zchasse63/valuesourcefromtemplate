@@ -163,8 +163,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         title: "Profile updated",
         description: "Your profile has been successfully updated.",
       });
-      
-      return updatedUser;
     } catch (error) {
       toast({
         title: "Update failed",
