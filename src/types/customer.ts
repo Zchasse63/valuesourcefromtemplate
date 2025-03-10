@@ -50,5 +50,5 @@ export interface Salesperson {
   name: string;
   email: string;
   role: string;
-  createdAt: Date;
+  createdAt: string | Date;
 }
