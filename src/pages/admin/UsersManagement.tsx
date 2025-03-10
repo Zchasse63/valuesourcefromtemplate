@@ -77,6 +77,8 @@ const UsersManagement = () => {
   };
 
   const handleToggleStatus = (user: User) => {
+    if (typeof user.isActive !== 'boolean') return;
+    
     const newUsers = users.map(u => 
       u.id === user.id ? { ...u, isActive: !u.isActive } : u
     );
@@ -137,21 +139,24 @@ const UsersManagement = () => {
     {
       key: "status",
       title: "Status",
-      render: (user: User) => (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${user.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
-          {user.isActive ? (
-            <>
-              <CheckCircle className="w-3 h-3 mr-1" />
-              Active
-            </>
-          ) : (
-            <>
-              <XCircle className="w-3 h-3 mr-1" />
-              Inactive
-            </>
-          )}
-        </span>
-      ),
+      render: (user: User) => {
+        const isActive = user.isActive ?? false;
+        return (
+          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+            {isActive ? (
+              <>
+                <CheckCircle className="w-3 h-3 mr-1" />
+                Active
+              </>
+            ) : (
+              <>
+                <XCircle className="w-3 h-3 mr-1" />
+                Inactive
+              </>
+            )}
+          </span>
+        );
+      },
       sortable: true,
     },
     {
@@ -170,35 +175,38 @@ const UsersManagement = () => {
     {
       key: "actions",
       title: "Actions",
-      render: (user: User) => (
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => handleEditUser(user)}
-            aria-label="Edit user"
-          >
-            <Edit className="h-4 w-4" />
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => handleToggleStatus(user)}
-            aria-label={user.isActive ? "Deactivate user" : "Activate user"}
-          >
-            {user.isActive ? <XCircle className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-red-500 hover:text-red-700 hover:bg-red-50"
-            onClick={() => handleDeleteUser(user)}
-            aria-label="Delete user"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      ),
+      render: (user: User) => {
+        const isActive = user.isActive ?? false;
+        return (
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => handleEditUser(user)}
+              aria-label="Edit user"
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => handleToggleStatus(user)}
+              aria-label={isActive ? "Deactivate user" : "Activate user"}
+            >
+              {isActive ? <XCircle className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-red-500 hover:text-red-700 hover:bg-red-50"
+              onClick={() => handleDeleteUser(user)}
+              aria-label="Delete user"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        );
+      },
     },
   ];
 

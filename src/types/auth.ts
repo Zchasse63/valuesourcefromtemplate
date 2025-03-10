@@ -6,7 +6,9 @@ export interface User {
   email: string;
   name: string;
   role: UserRole;
-  createdAt: Date;
+  avatar?: string;
+  isActive?: boolean;
+  createdAt: string | Date;
 }
 
 export interface AuthContextType {

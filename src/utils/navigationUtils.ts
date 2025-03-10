@@ -66,22 +66,22 @@ export const getNavItems = (user: UserType | null): NavItem[] => {
       },
       {
         name: "Users",
-        href: "/users",
+        href: "/admin/users",
         icon: Users,
       },
       {
         name: "Sales",
-        href: "/sales",
+        href: "/admin/sales",
         icon: DollarSign,
       },
       {
         name: "Customers",
-        href: "/customers",
+        href: "/admin/customers",
         icon: Users,
       },
       {
         name: "Transactions",
-        href: "/transactions",
+        href: "/admin/transactions",
         icon: Receipt,
       },
     ];
@@ -90,22 +90,22 @@ export const getNavItems = (user: UserType | null): NavItem[] => {
       ...commonItems,
       {
         name: "Team",
-        href: "/team",
+        href: "/sales/team",
         icon: Users,
       },
       {
         name: "Customers",
-        href: "/customers",
+        href: "/sales/customers",
         icon: Users,
       },
       {
         name: "Transactions",
-        href: "/transactions",
+        href: "/sales/transactions",
         icon: Receipt,
       },
       {
         name: "Performance",
-        href: "/performance",
+        href: "/sales/performance",
         icon: LineChart,
       },
     ];
