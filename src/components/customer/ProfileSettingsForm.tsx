@@ -23,22 +23,21 @@ const ProfileSettingsForm = () => {
     company: "Example Corp", // This would come from user profile
     phone: "+1234567890", // This would come from user profile
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
-      // In a real app, this would call an API
-      await new Promise(resolve => setTimeout(resolve, 500));
-      toast({
-        title: "Profile updated",
-        description: "Your profile has been successfully updated.",
+      await updateProfile({
+        name: formData.name,
+        email: formData.email,
+        // In a real app, we'd also update company and phone in a customer profile table
       });
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-        variant: "destructive",
-      });
+      console.error("Error updating profile:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -112,8 +111,12 @@ const ProfileSettingsForm = () => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full">
-            Save Changes
+          <Button 
+            type="submit" 
+            className="w-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Saving..." : "Save Changes"}
           </Button>
         </form>
       </CardContent>

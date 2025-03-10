@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { AuthContextType, User, UserRole } from "@/types/auth";
 import { useToast } from "@/components/ui/use-toast";
@@ -137,8 +136,49 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  const updateProfile = async (userData: Partial<User>) => {
+    setIsLoading(true);
+    try {
+      // Simulate API call with timeout
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      if (!user) {
+        throw new Error("User not logged in");
+      }
+      
+      // Update user data (in a real app, this would be an API call)
+      const updatedUser = { ...user, ...userData };
+      
+      // Update the user in mockUsers
+      const userIndex = mockUsers.findIndex(u => u.id === user.id);
+      if (userIndex >= 0) {
+        mockUsers[userIndex] = updatedUser;
+      }
+      
+      // Update state and localStorage
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been successfully updated.",
+      });
+      
+      return updatedUser;
+    } catch (error) {
+      toast({
+        title: "Update failed",
+        description: error instanceof Error ? error.message : "Failed to update profile",
+        variant: "destructive",
+      });
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, signup, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );
