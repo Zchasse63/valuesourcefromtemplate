@@ -13,8 +13,8 @@ import Analytics from "@/pages/Analytics";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import SalesTeam from "@/pages/admin/SalesTeam";
 import AdminCustomers from "@/pages/admin/Customers";
-import AdminCustomerDetail from "@/pages/admin/CustomerDetail";
-import AdminTransactions from "@/pages/admin/Transactions";
+import CustomerDetail from "@/pages/CustomerDetail"; // Import from the correct location
+import Transactions from "@/pages/Transactions"; // Import from the correct location
 import AdminSettings from "@/pages/admin/Settings";
 import AdminNotifications from "@/pages/admin/Notifications";
 
@@ -22,9 +22,7 @@ import AdminNotifications from "@/pages/admin/Notifications";
 import SalesPortal from "@/portals/sales/SalesPortal";
 import SalesDashboard from "@/pages/sales/Dashboard";
 import CustomerList from "@/pages/CustomerList";
-import CustomerDetail from "@/pages/CustomerDetail";
 import SalesPerformance from "@/pages/sales/Performance";
-import Transactions from "@/pages/Transactions";
 import SalesSettings from "@/pages/sales/Settings";
 import SalesNotifications from "@/pages/sales/Notifications";
 
@@ -84,8 +82,8 @@ const AppRoutes = () => {
           <PlaceholderPage title="Sales Team Management" />
         } />
         <Route path="customers" element={<AdminCustomers />} />
-        <Route path="customers/:customerId" element={<AdminCustomerDetail />} />
-        <Route path="transactions" element={<AdminTransactions />} />
+        <Route path="customers/:customerId" element={<CustomerDetail />} /> {/* Use the shared CustomerDetail component */}
+        <Route path="transactions" element={<Transactions />} /> {/* Use the shared Transactions component */}
         <Route path="settings" element={<AdminSettings />} />
         <Route path="notifications" element={<AdminNotifications />} />
       </Route>
