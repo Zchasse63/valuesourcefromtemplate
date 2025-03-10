@@ -13,12 +13,12 @@ import Analytics from "@/pages/Analytics";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import SalesTeam from "@/pages/admin/SalesTeam";
 import AdminCustomers from "@/pages/admin/Customers";
-import CustomerDetail from "@/pages/CustomerDetail"; // Import from the correct location
-import Transactions from "@/pages/Transactions"; // Import from the correct location
+import CustomerDetail from "@/pages/CustomerDetail"; 
+import Transactions from "@/pages/Transactions"; 
 import AdminSettings from "@/pages/admin/Settings";
 import AdminNotifications from "@/pages/admin/Notifications";
-import UsersManagement from "@/pages/admin/UsersManagement"; // New users management page
-import SalesAnalytics from "@/pages/admin/SalesAnalytics"; // New sales analytics page
+import UsersManagement from "@/pages/admin/UsersManagement";
+import SalesAnalytics from "@/pages/admin/SalesAnalytics";
 
 // Sales Portal
 import SalesPortal from "@/portals/sales/SalesPortal";
@@ -27,13 +27,14 @@ import CustomerList from "@/pages/CustomerList";
 import SalesPerformance from "@/pages/sales/Performance";
 import SalesSettings from "@/pages/sales/Settings";
 import SalesNotifications from "@/pages/sales/Notifications";
-import TeamMembers from "@/pages/sales/TeamMembers"; // New team members page for sales portal
+import TeamMembers from "@/pages/sales/TeamMembers";
 
 // Customer Portal
 import CustomerPortal from "@/portals/customer/CustomerPortal";
 import CustomerDashboard from "@/pages/customer/Dashboard";
 import CustomerProfile from "@/pages/CustomerProfile";
 import CustomerOrders from "@/pages/customer/Orders";
+import CustomerOrderDetail from "@/pages/customer/OrderDetail";
 import CustomerBilling from "@/pages/customer/Billing";
 import CustomerSupport from "@/pages/customer/Support";
 import CustomerSettings from "@/pages/customer/Settings";
@@ -81,14 +82,14 @@ const AppRoutes = () => {
       <Route path="/admin" element={<AdminPortal />}>
         <Route index element={<AdminDashboard />} />
         <Route path="analytics" element={<Analytics />} />
-        <Route path="users" element={<UsersManagement />} /> {/* New users management route */}
-        <Route path="sales" element={<SalesAnalytics />} /> {/* New sales analytics route */}
+        <Route path="users" element={<UsersManagement />} />
+        <Route path="sales" element={<SalesAnalytics />} />
         <Route path="salesteam" element={
           <PlaceholderPage title="Sales Team Management" />
         } />
         <Route path="customers" element={<AdminCustomers />} />
-        <Route path="customers/:customerId" element={<CustomerDetail />} /> {/* Use the shared CustomerDetail component */}
-        <Route path="transactions" element={<Transactions />} /> {/* Use the shared Transactions component */}
+        <Route path="customers/:customerId" element={<CustomerDetail />} />
+        <Route path="transactions" element={<Transactions />} />
         <Route path="settings" element={<AdminSettings />} />
         <Route path="notifications" element={<AdminNotifications />} />
       </Route>
@@ -96,7 +97,7 @@ const AppRoutes = () => {
       {/* Sales Portal Routes */}
       <Route path="/sales" element={<SalesPortal />}>
         <Route index element={<SalesDashboard />} />
-        <Route path="team" element={<TeamMembers />} /> {/* New team members route for sales portal */}
+        <Route path="team" element={<TeamMembers />} />
         <Route path="customers" element={<CustomerList />} />
         <Route path="customers/:customerId" element={<CustomerDetail />} />
         <Route path="transactions" element={<Transactions />} />
@@ -110,6 +111,7 @@ const AppRoutes = () => {
         <Route index element={<CustomerDashboard />} />
         <Route path="profile" element={<CustomerProfile />} />
         <Route path="orders" element={<CustomerOrders />} />
+        <Route path="orders/:orderId" element={<CustomerOrderDetail />} />
         <Route path="billing" element={<CustomerBilling />} />
         <Route path="support" element={<CustomerSupport />} />
         <Route path="settings" element={<CustomerSettings />} />

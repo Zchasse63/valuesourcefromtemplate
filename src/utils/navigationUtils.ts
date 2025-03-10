@@ -9,7 +9,10 @@ import {
   Users,
   DollarSign,
   LineChart,
-  LucideIcon
+  LucideIcon,
+  CreditCard,
+  HelpCircle,
+  FileText
 } from "lucide-react";
 import { User as UserType } from "@/types/auth";
 
@@ -32,6 +35,7 @@ export interface NavItem {
  * @returns {NavItem[]} Array of navigation items for the sidebar
  */
 export const getNavItems = (user: UserType | null): NavItem[] => {
+  // Common items that all authenticated users can access
   const commonItems: NavItem[] = [
     {
       name: "Dashboard",
@@ -58,10 +62,14 @@ export const getNavItems = (user: UserType | null): NavItem[] => {
   // Role-specific items
   if (user?.role === "admin") {
     return [
-      ...commonItems,
+      {
+        name: "Dashboard",
+        href: "/admin",
+        icon: LayoutDashboard,
+      },
       {
         name: "Analytics",
-        href: "/analytics",
+        href: "/admin/analytics",
         icon: BarChart3,
       },
       {
@@ -84,10 +92,24 @@ export const getNavItems = (user: UserType | null): NavItem[] => {
         href: "/admin/transactions",
         icon: Receipt,
       },
+      {
+        name: "Notifications",
+        href: "/admin/notifications",
+        icon: Bell,
+      },
+      {
+        name: "Settings",
+        href: "/admin/settings",
+        icon: Settings,
+      },
     ];
   } else if (user?.role === "salesperson") {
     return [
-      ...commonItems,
+      {
+        name: "Dashboard",
+        href: "/sales",
+        icon: LayoutDashboard,
+      },
       {
         name: "Team",
         href: "/sales/team",
@@ -108,14 +130,53 @@ export const getNavItems = (user: UserType | null): NavItem[] => {
         href: "/sales/performance",
         icon: LineChart,
       },
+      {
+        name: "Notifications",
+        href: "/sales/notifications",
+        icon: Bell,
+      },
+      {
+        name: "Settings",
+        href: "/sales/settings",
+        icon: Settings,
+      },
     ];
   } else if (user?.role === "customer") {
     return [
-      ...commonItems,
+      {
+        name: "Dashboard",
+        href: "/customer",
+        icon: LayoutDashboard,
+      },
       {
         name: "My Profile",
-        href: "/customer-profile",
+        href: "/customer/profile",
         icon: User,
+      },
+      {
+        name: "My Orders",
+        href: "/customer/orders",
+        icon: FileText,
+      },
+      {
+        name: "Billing",
+        href: "/customer/billing",
+        icon: CreditCard,
+      },
+      {
+        name: "Support",
+        href: "/customer/support",
+        icon: HelpCircle,
+      },
+      {
+        name: "Notifications",
+        href: "/customer/notifications",
+        icon: Bell,
+      },
+      {
+        name: "Settings",
+        href: "/customer/settings",
+        icon: Settings,
       },
     ];
   }

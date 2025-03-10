@@ -5,7 +5,7 @@ import NavItem from "@/components/sidebar/NavItem";
 import UserProfile from "@/components/sidebar/UserProfile";
 import { 
   LayoutDashboard, 
-  Receipt, 
+  FileText, 
   User,
   Settings, 
   Bell,
@@ -34,7 +34,7 @@ const CustomerSidebar = () => {
     {
       name: "My Orders",
       href: "/customer/orders",
-      icon: Receipt,
+      icon: FileText,
     },
     {
       name: "Billing",
@@ -42,14 +42,14 @@ const CustomerSidebar = () => {
       icon: CreditCard,
     },
     {
-      name: "Notifications",
-      href: "/customer/notifications",
-      icon: Bell,
-    },
-    {
       name: "Support",
       href: "/customer/support",
       icon: HelpCircle,
+    },
+    {
+      name: "Notifications",
+      href: "/customer/notifications",
+      icon: Bell,
     },
     {
       name: "Settings",
